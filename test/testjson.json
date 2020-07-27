@@ -1,0 +1,7 @@
+{
+  "Top": { "spell1": "teleport", "spell2": "flash" },
+  "Jungle": { "spell1": "smite", "spell2": "flash" },
+  "Middle": { "spell1": "ignite", "spell2": "flash" },
+  "Bottom": { "spell1": "heal", "spell2": "flash" },
+  "Support": { "spell1": "ignite", "spell2": "flash" }
+}
