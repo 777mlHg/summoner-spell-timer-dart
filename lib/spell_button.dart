@@ -4,8 +4,9 @@ import 'package:summoner_spell_timer/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SpellWidgets extends StatefulWidget {
-  SpellWidgets({this.spellName});
+  SpellWidgets({this.spellName, this.role});
   final String spellName;
+  final String role;
   @override
   _SpellWidgetsState createState() => _SpellWidgetsState();
 }
@@ -22,6 +23,7 @@ class _SpellWidgetsState extends State<SpellWidgets> {
     super.initState();
   }
 
+  /// starts timer
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
     if (_timer != null) {
@@ -51,15 +53,169 @@ class _SpellWidgetsState extends State<SpellWidgets> {
     }
   }
 
+  /// stores tap position
+  void _storePosition(TapDownDetails details) {
+    _tapPosition = details.globalPosition;
+  }
+
+  /// change spell in shared preference
+  Future<String> _changeSpell(String spell, String position) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString(position, spell);
+    return spell;
+  }
+
+//TODO: remove this
+  void printPreferences() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    print(preferences.getKeys());
+    print(preferences.get('top1'));
+    print(selectedSpell);
+  }
+
+  /// this function displays a list of popup items of summoner spells
   void showOptions() {
     final RenderBox overlay = Overlay.of(context).context.findRenderObject();
-    showMenu( 
+    showMenu(
+      //list of options
       items: [
-        PopupMenuItem( 
+        PopupMenuItem(
           child: FlatButton(
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                _changeSpell(kSpells['barrier']['name'], widget.role);
+                selectedSpell = 'barrier';
+                _start = 0;
+              });
+            },
             child: Text(
-              "Flat Button",
+              "Barrier",
+            ),
+          ),
+        ),
+        PopupMenuItem(
+          child: FlatButton(
+            onPressed: () {
+              setState(() {
+                _changeSpell(kSpells['clarity']['name'], widget.role);
+                selectedSpell = 'clarity';
+                _start = 0;
+              });
+            },
+            child: Text(
+              "Clarity",
+            ),
+          ),
+        ),
+        PopupMenuItem(
+          child: FlatButton(
+            onPressed: () {
+              setState(() {
+                _changeSpell(kSpells['cleanse']['name'], widget.role);
+                selectedSpell = 'cleanse';
+                _start = 0;
+              });
+            },
+            child: Text(
+              "Cleanse",
+            ),
+          ),
+        ),
+        PopupMenuItem(
+          child: FlatButton(
+            onPressed: () {
+              setState(() {
+                _changeSpell(kSpells['exhaust']['name'], widget.role);
+                selectedSpell = 'exhaust';
+                _start = 0;
+              });
+            },
+            child: Text(
+              "Exhaust",
+            ),
+          ),
+        ),
+        PopupMenuItem(
+          child: FlatButton(
+            onPressed: () {
+              setState(() {
+                _changeSpell(kSpells['flash']['name'], widget.role);
+                selectedSpell = 'flash';
+                _start = 0;
+              });
+            },
+            child: Text(
+              "Flash",
+            ),
+          ),
+        ),
+        PopupMenuItem(
+          child: FlatButton(
+            onPressed: () {
+              setState(() {
+                _changeSpell(kSpells['ghost']['name'], widget.role);
+                selectedSpell = 'ghost';
+                _start = 0;
+              });
+            },
+            child: Text(
+              "Ghost",
+            ),
+          ),
+        ),
+        PopupMenuItem(
+          child: FlatButton(
+            onPressed: () {
+              setState(() {
+                _changeSpell(kSpells['heal']['name'], widget.role);
+                selectedSpell = 'heal';
+                _start = 0;
+              });
+            },
+            child: Text(
+              "Heal",
+            ),
+          ),
+        ),
+        PopupMenuItem(
+          child: FlatButton(
+            onPressed: () {
+              setState(() {
+                _changeSpell(kSpells['ignite']['name'], widget.role);
+                selectedSpell = 'ignite';
+                _start = 0;
+              });
+            },
+            child: Text(
+              "Ignite",
+            ),
+          ),
+        ),
+        PopupMenuItem(
+          child: FlatButton(
+            onPressed: () {
+              setState(() {
+                _changeSpell(kSpells['smite']['name'], widget.role);
+                selectedSpell = 'smite';
+                _start = 0;
+              });
+            },
+            child: Text(
+              "Smite",
+            ),
+          ),
+        ),
+        PopupMenuItem(
+          child: FlatButton(
+            onPressed: () {
+              setState(() {
+                _changeSpell(kSpells['teleport']['name'], widget.role);
+                selectedSpell = 'teleport';
+                _start = 0;
+              });
+            },
+            child: Text(
+              "Teleport",
             ),
           ),
         ),
@@ -72,21 +228,12 @@ class _SpellWidgetsState extends State<SpellWidgets> {
     );
   }
 
-  void _storePosition(TapDownDetails details) {
-    _tapPosition = details.globalPosition;
-  }
-
-  _changeSpell(String spell, String position) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString(position, spell);
-  }
-
   @override
   Widget build(BuildContext context) {
-    // TODO: int spellCoolDown = kSpells[widget.spellName]['coolDown'];
-    int spellCoolDown = 5;
-
-    selectedSpell = widget.spellName;
+    int spellCoolDown = selectedSpell is String
+        ? kSpells[selectedSpell]['coolDown']
+        : kSpells[widget.spellName]['coolDown'];
+    // int spellCoolDown = 5;
 
     return SizedBox(
       height: 124,
@@ -95,9 +242,9 @@ class _SpellWidgetsState extends State<SpellWidgets> {
           alignment: Alignment.center,
           overflow: Overflow.clip,
           children: <Widget>[
-            Image.asset(
-              kSpells[selectedSpell]['image'],
-            ),
+            Image.asset(selectedSpell is String
+                ? kSpells[selectedSpell]['image']
+                : kSpells[widget.spellName]['image']),
             Container(
                 child: isTimerActive
                     ? CircularProgressIndicator(
@@ -118,7 +265,7 @@ class _SpellWidgetsState extends State<SpellWidgets> {
                       )
                     : null),
             ClipPath(
-              clipper: InvertedCircleClipper(),
+              clipper: InvertedClipper(),
               child: Container(
                 color: Color(0xFFE9C46A),
               ),
@@ -141,7 +288,7 @@ class _SpellWidgetsState extends State<SpellWidgets> {
   }
 }
 
-class InvertedCircleClipper extends CustomClipper<Path> {
+class InvertedClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     return Path()

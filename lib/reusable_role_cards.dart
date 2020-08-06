@@ -22,10 +22,12 @@ class ReusableRoleCard extends StatelessWidget {
           Expanded(
               child: SpellWidgets(
             spellName: summoners1,
+            role: roleName.toLowerCase() + '1',
           )),
           Expanded(
               child: SpellWidgets(
             spellName: summoners2,
+            role: roleName.toLowerCase() + '2',
           )),
         ],
       ),

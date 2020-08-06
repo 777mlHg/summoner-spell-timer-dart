@@ -20,7 +20,6 @@ class _InputPageState extends State<InputPage> {
     "support1": "ignite",
     "support2": "flash",
   };
-
   @override
   void initState() {
     super.initState();
@@ -29,6 +28,8 @@ class _InputPageState extends State<InputPage> {
 
   _loadSpellData() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
+    // TODO: clear preference
+    // preferences.clear();
     setState(() {
       spellPreferences.forEach((key, value) {
         spellPreferences[key] = (preferences.getString(key) ?? value);
@@ -50,6 +51,34 @@ class _InputPageState extends State<InputPage> {
               roleName: 'Top',
               summoners1: spellPreferences['top1'],
               summoners2: spellPreferences['top2'],
+            ),
+          ),
+          Expanded(
+            child: ReusableRoleCard(
+              roleName: 'Jungle',
+              summoners1: spellPreferences['jungle1'],
+              summoners2: spellPreferences['jungle2'],
+            ),
+          ),
+          Expanded(
+            child: ReusableRoleCard(
+              roleName: 'Middle',
+              summoners1: spellPreferences['middle1'],
+              summoners2: spellPreferences['middle2'],
+            ),
+          ),
+          Expanded(
+            child: ReusableRoleCard(
+              roleName: 'Bottom',
+              summoners1: spellPreferences['bottom1'],
+              summoners2: spellPreferences['bottom2'],
+            ),
+          ),
+          Expanded(
+            child: ReusableRoleCard(
+              roleName: 'Support',
+              summoners1: spellPreferences['support1'],
+              summoners2: spellPreferences['support2'],
             ),
           ),
         ],
